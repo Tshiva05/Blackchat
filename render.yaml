@@ -15,8 +15,8 @@ services:
   - type: web
     name: chat-backend
     runtime: docker
-    dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
+    dockerfilePath: ./Backend/Dockerfile
+    dockerContext: ./Backend
     plan: free
     healthCheckPath: /api/health
     envVars:
@@ -44,8 +44,8 @@ services:
   - type: web
     name: chat-frontend
     runtime: docker
-    dockerfilePath: ./frontend/Dockerfile
-    dockerContext: ./frontend
+    dockerfilePath: ./Frontend/Dockerfile
+    dockerContext: ./Frontend
     plan: free
     envVars:
       - key: NEXT_PUBLIC_API_URL
