@@ -1,0 +1,54 @@
+# Render Blueprint — deploys both services straight from the Dockerfiles
+# already in this repo, so you don't have to hand-configure build/start
+# commands from your phone.
+#
+# How to use:
+#   1. Push this repo to GitHub (from Termux or Spck Editor's Git panel).
+#   2. In Render: New + -> Blueprint -> pick this repo. Render reads this file.
+#   3. Fill in the "sync: false" env vars in the Render dashboard for each
+#      service (secrets, and the two services' URLs once you know them).
+#
+# You do NOT need docker-compose.yml for Render — that file is only for
+# running both services together on your own machine/VPS.
+
+services:
+  - type: web
+    name: chat-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: CROSS_SITE_COOKIES
+        value: "true"
+      - key: CLIENT_URL
+        sync: false # fill in with your chat-frontend Render URL, e.g. https://chat-frontend.onrender.com
+      - key: MONGODB_URI
+        sync: false # paste your Atlas connection string
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  - type: web
+    name: chat-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        sync: false # fill in with https://chat-backend.onrender.com/api once the backend is deployed
+      - key: NEXT_PUBLIC_SOCKET_URL
+        sync: false # fill in with https://chat-backend.onrender.com

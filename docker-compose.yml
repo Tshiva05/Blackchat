@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: chat-app-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    container_name: chat-app-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5000/api
+      NEXT_PUBLIC_SOCKET_URL: http://localhost:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+# Note: MongoDB is Atlas (cloud-hosted), so there's no "mongo" service here —
+# the backend connects out to your Atlas cluster via MONGODB_URI in backend/.env.
+# If you'd rather run Mongo locally instead of Atlas, add a service like:
+#
+#   mongo:
+#     image: mongo:7
+#     ports: ["27017:27017"]
+#     volumes: ["mongo-data:/data/db"]
+#
+# volumes:
+#   mongo-data:
