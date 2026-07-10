@@ -59,9 +59,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(res.data.user);
   }
 
-  async function requestRegisterOtp(identifier: string) {
-    await api.post("/auth/register/request-otp", { identifier });
+  
+
+async function requestRegisterOtp(identifier: string) {
+  try {
+    const response = await api.post("/auth/register/request-otp", { identifier });
+    return response.data;
+  } catch (error) {
+    console.error("OTP request fault:", error);
+    throw error;
   }
+}
+ 
 
   async function verifyRegisterOtp(params: {
     identifier: string;
