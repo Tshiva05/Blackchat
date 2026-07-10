@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || https://chat-frontend-9k9s.onrender.com ;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://chat-frontend-9k9s.onrender.com" ;
 
 export const api = axios.create({
   baseURL: API_URL,
